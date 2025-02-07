@@ -11,20 +11,49 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            text-align: center;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-
     <!-- Audio element to play the sound in a loop -->
-    <audio autoplay loop>
-        <source src="your-audio-file.mp3" type="audio/mp3">
-        <source src="your-audio-file.ogg" type="audio/ogg">
-        Your browser does not support the audio element.skibodin
+    <audio id="audioElement" loop>
+        <source src="/Sounds/Hello_My_Lovely.mp3" type="audio/mp3">
+        <source src="/Sounds/Hello_My_Lovelyogg.ogg" type="audio/ogg">
+        Your browser does not support the audio element.skoboding
     </audio>
+
+    <!-- Button to manually play audio if autoplay is blocked -->
+    <button id="playButton" style="display: none;">Play Audio</button>
+
     <h1>Reginald Fuckoff</h1>
-    <p>This is reginald the most powerful man in the world</p>
+    <p>This is Reginald, the most powerful man in the world.</p>
     <img src="/images/reginald.jpg"
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const audio = document.getElementById("audioElement");
+            const playButton = document.getElementById("playButton");
+
+            // Try to play audio on page load
+            audio.play().then(() => {
+                console.log("Audio autoplayed successfully.");
+            }).catch(() => {
+                console.log("Autoplay blocked, showing play button.");
+                playButton.style.display = "block"; // Show button if autoplay is blocked
+            });
+
+            // Button fallback for user interaction
+            playButton.addEventListener("click", function() {
+                audio.play();
+                playButton.style.display = "none"; // Hide button after playing
+            });
+        });
+    </script>
 </body>
 </html>
