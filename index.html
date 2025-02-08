@@ -51,7 +51,8 @@
             const correctPassword = "IsItInWales"; // Change this to your desired password
             
             if (password === correctPassword) {
-                window.location.href = "https://example.com"; // Change to your desired URL
+                sessionStorage.setItem("authenticated", "true"); // Store authentication state
+                window.location.href = "ReginaldSecretPage.html"; // Redirect to the protected page
             } else {
                 alert("Incorrect password your shit at this");
             }
