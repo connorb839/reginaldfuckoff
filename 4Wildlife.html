@@ -8,7 +8,7 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
-            transition: background 0.2s;
+            transition: background 0.1s;
         }
         .hidden {
             display: none;
@@ -17,10 +17,10 @@
 </head>
 <body>
     <h1>Are you Wildlife?</h1>
-    <button onclick="triggerEffect()">Yes</button>
-    <button onclick="showNoMessage()">No</button>
+    <button id="yesBtn" onclick="triggerEffect()">Yes</button>
+    <button id="noBtn" onclick="showNoMessage()">No</button>
     <p id="noMessage" class="hidden">Fuck off then this page isnt for you my lovely</p>
-    <audio id="sound" loop>
+    <audio id="sound">
         <source src="/Sounds/Wildlife.mp3" type="audio/mp3">
         <source src="/Sounds/Wildlife.ogg" type="audio/ogg">
         Your browser does not support the audio element.
@@ -30,17 +30,26 @@
         let colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
         let index = 0;
         let flashing;
+        let audio = document.getElementById("sound");
 
         function triggerEffect() {
-            document.getElementById("sound").play();
+            disableButtons();
+            audio.play();
+            audio.onended = () => { audio.currentTime = 0; audio.play(); };
             flashing = setInterval(() => {
                 document.body.style.background = colors[index];
                 index = (index + 1) % colors.length;
-            }, 200);
+            }, 100);
         }
         
         function showNoMessage() {
+            disableButtons();
             document.getElementById("noMessage").classList.remove("hidden");
+        }
+
+        function disableButtons() {
+            document.getElementById("yesBtn").disabled = true;
+            document.getElementById("noBtn").disabled = true;
         }
     </script>
 </body>
