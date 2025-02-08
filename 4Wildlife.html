@@ -14,6 +14,14 @@
             display: none;
         }
     </style>
+    <script>
+        window.onload = function() {
+            if (sessionStorage.getItem("authenticated") !== "true") {
+                alert("Unauthorized access. Redirecting to home page.");
+                window.location.href = "index.html";
+            }
+        };
+    </script>
 </head>
 <body>
     <h1>Are you Wildlife?</h1>
@@ -54,3 +62,4 @@
     </script>
 </body>
 </html>
+
