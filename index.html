@@ -48,11 +48,14 @@
 
         function checkPassword() {
             const password = document.getElementById("passwordInput").value;
-            const correctPassword = "IsItInWales"; // Change this to your desired password
+            const passwords = {
+                "IsItInWales": "ReginaldSecretPage.html",
+                "Wildlife": "DifferentSecretPage.html"
+            };
             
-            if (password === correctPassword) {
-                sessionStorage.setItem("authenticated", "true"); // Store authentication state
-                window.location.href = "ReginaldSecretPage.html"; // Redirect to the protected page
+            if (passwords[password]) {
+                sessionStorage.setItem("authenticated", "true");
+                window.location.href = passwords[password];
             } else {
                 alert("Incorrect password your shit at this stuff");
             }
