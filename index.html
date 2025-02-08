@@ -47,17 +47,17 @@
         });
 
         function checkPassword() {
-            const password = document.getElementById("passwordInput").value;
-            const passwords = {
+            const password = document.getElementById("passwordInput").value.trim();
+            const passwordMap = {
                 "IsItInWales": "ReginaldSecretPage.html",
                 "Wildlife": "4Wildlife.html"
             };
             
-            if (passwords[password]) {
+            if (passwordMap.hasOwnProperty(password)) {
                 sessionStorage.setItem("authenticated", "true");
-                window.location.href = passwords[password];
+                window.location.href = passwordMap[password];
             } else {
-                alert("Incorrect password your shit at this stuff");
+                alert("Incorrect password. Your a cockface");
             }
         }
     </script>
