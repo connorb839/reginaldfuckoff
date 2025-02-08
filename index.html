@@ -14,13 +14,16 @@
             text-align: center;
         }
         img {
-            cursor: pointer; /* Indicates the image is clickable */
-            width: 300px; /* Adjust size if needed */
+            cursor: pointer;
+            width: 300px;
+        }
+        #passwordContainer {
+            display: none;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Audio element to play the sound -->
     <audio id="audioElement" loop>
         <source src="/Sounds/Hello_My_Lovely.mp3" type="audio/mp3">
         <source src="/Sounds/Hello_My_Lovely.ogg" type="audio/ogg">
@@ -30,12 +33,29 @@
     <h1>Reginald Fuckoff</h1>
     <p>This is Reginald, the most powerful man in the world.</p>
     <img id="reginaldImage" src="/images/reginald.jpg" alt="Reginald">
+    
+    <div id="passwordContainer">
+        <input type="password" id="passwordInput" placeholder="Enter Password">
+        <button onclick="checkPassword()">Submit</button>
+    </div>
 
     <script>
         document.getElementById("reginaldImage").addEventListener("click", function() {
             const audio = document.getElementById("audioElement");
             audio.play();
+            document.getElementById("passwordContainer").style.display = "block";
         });
+
+        function checkPassword() {
+            const password = document.getElementById("passwordInput").value;
+            const correctPassword = "IsItInWales"; // Change this to your desired password
+            
+            if (password === correctPassword) {
+                window.location.href = "https://example.com"; // Change to your desired URL
+            } else {
+                alert("Incorrect password your shit at this");
+            }
+        }
     </script>
 </body>
 </html>
