@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are you Wildlife?</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            transition: background 0.2s;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Are you Wildlife?</h1>
+    <button onclick="triggerEffect()">Yes</button>
+    <button onclick="showNoMessage()">No</button>
+    <p id="noMessage" class="hidden">Fuck off then this page isnt for you my lovely</p>
+    <audio id="sound" loop>
+        <source src="your-sound-file.mp3" type="audio/mp3">
+        <source src="your-sound-file.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <script>
+        let colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
+        let index = 0;
+        let flashing;
+
+        function triggerEffect() {
+            document.getElementById("sound").play();
+            flashing = setInterval(() => {
+                document.body.style.background = colors[index];
+                index = (index + 1) % colors.length;
+            }, 200);
+        }
+        
+        function showNoMessage() {
+            document.getElementById("noMessage").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
