@@ -43,6 +43,12 @@
     </style>
 </head>
 <body>
+    <script>
+        if (!sessionStorage.getItem("authenticated")) {
+            window.location.href = "index.html";
+        }
+    </script>
+    
     <h1>Blackjack</h1>
     <div id="game-container">
         <p>Reg Tokens: <span id="tokens"></span></p>
@@ -62,12 +68,12 @@
         <p id="message"></p>
     </div>
     <script>
-        let tokens = localStorage.getItem("tokens") ? parseInt(localStorage.getItem("tokens")) : 100;
+        let tokens = sessionStorage.getItem("tokens") ? parseInt(sessionStorage.getItem("tokens")) : 100;
         document.getElementById("tokens").innerText = tokens;
         
         function updateTokens(amount) {
             tokens = Math.max(1, tokens + amount);
-            localStorage.setItem("tokens", tokens);
+            sessionStorage.setItem("tokens", tokens);
             document.getElementById("tokens").innerText = tokens;
         }
         
