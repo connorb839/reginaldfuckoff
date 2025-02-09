@@ -74,7 +74,7 @@
             <h2>Your Hand</h2>
             <div id="player-cards"></div>
         </div>
-        <button id="start-btn" onclick="startGame()">Start Game</button>
+        <button id="new-game-btn" onclick="startGame()">New Game</button>
         <button id="hit-btn" onclick="hit()" disabled>Hit</button>
         <button id="stand-btn" onclick="stand()" disabled>Stand</button>
         <p id="message"></p>
@@ -111,7 +111,7 @@
             }
             document.getElementById("hit-btn").disabled = false;
             document.getElementById("stand-btn").disabled = false;
-            document.getElementById("start-btn").disabled = true;
+            document.getElementById("new-game-btn").disabled = true;
             deck = createDeck();
             playerHand = [deck.pop(), deck.pop()];
             dealerHand = [deck.pop(), deck.pop()];
@@ -159,6 +159,11 @@
             let dealerTotal = calculateHand(dealerHand);
             let bet = parseInt(document.getElementById('bet').value);
 
+            while (calculateHand(dealerHand) < 17) {
+                dealerHand.push(deck.pop());
+                displayCards();
+            }
+
             if (playerTotal > 21) {
                 document.getElementById("message").innerText = "You lose!";
                 updateTokens(-bet);
@@ -174,7 +179,7 @@
 
             document.getElementById("hit-btn").disabled = true;
             document.getElementById("stand-btn").disabled = true;
-            document.getElementById("start-btn").disabled = false;
+            document.getElementById("new-game-btn").disabled = false;
         }
 
         function calculateHand(hand) {
