@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Game</title>
+    <title>Regjack Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -49,12 +49,12 @@
         }
     </script>
     
-    <h1>Blackjack</h1>
+    <h1>RegJack</h1>
     <div id="game-container">
         <p>Reg Tokens: <span id="tokens"></span></p>
         <p>Bet Amount: <input type="number" id="bet" value="10" min="1"></p>
         <div>
-            <h2>Dealer</h2>
+            <h2>Reginald</h2>
             <img src="dealer.jpg" alt="Dealer">
             <div id="dealer-cards"></div>
         </div>
@@ -92,14 +92,14 @@
         function startGame() {
             let bet = parseInt(document.getElementById('bet').value);
             if (bet > tokens || bet < 1) {
-                alert("Invalid bet amount!");
+                alert("Invalid bet amount cockhead");
                 return;
             }
             deck = createDeck();
             playerHand = [deck.pop(), deck.pop()];
             dealerHand = [deck.pop(), deck.pop()];
             displayCards();
-            document.getElementById("message").innerText = "Game Started! Choose an action.";
+            document.getElementById("message").innerText = "Game Started! Hurry up and choose you cunt";
         }
         
         function getHandValue(hand) {
@@ -127,7 +127,7 @@
             displayCards();
             if (getHandValue(playerHand) > 21) {
                 updateTokens(-parseInt(document.getElementById('bet').value));
-                endGame("You busted! Dealer wins.");
+                endGame("Silly Fucker you bust Reg wins again");
             }
         }
         
@@ -140,12 +140,12 @@
             let bet = parseInt(document.getElementById('bet').value);
             if (dealerValue > 21 || playerValue > dealerValue) {
                 updateTokens(bet);
-                endGame("You win!");
+                endGame("How did you beat Reg");
             } else if (dealerValue === playerValue) {
-                endGame("It's a tie!");
+                endGame("It's a tie KYS");
             } else {
                 updateTokens(-bet);
-                endGame("Dealer wins.");
+                endGame("Reg wins again My lovely.");
             }
         }
         
