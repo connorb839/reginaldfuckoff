@@ -10,7 +10,7 @@
             text-align: center;
             background: linear-gradient(to right, #003300, #001100);
             color: white;
-            overflow: auto; 
+            overflow: auto;
         }
         #game-container {
             max-width: 600px;
@@ -35,7 +35,7 @@
             box-shadow: 2px 2px 10px rgba(0, 255, 0, 0.5);
             transform: translateY(-50px);
             opacity: 0;
-            transition: transform 1s ease-out, opacity 1s ease-out; 
+            transition: transform 1s ease-out, opacity 1s ease-out;
         }
         button {
             margin: 10px;
@@ -74,9 +74,9 @@
             <h2>Your Hand</h2>
             <div id="player-cards"></div>
         </div>
-        <button onclick="startGame()">Start Game</button>
-        <button onclick="hit()">Hit</button>
-        <button onclick="stand()">Stand</button>
+        <button id="start-btn" onclick="startGame()">Start Game</button>
+        <button id="hit-btn" onclick="hit()" disabled>Hit</button>
+        <button id="stand-btn" onclick="stand()" disabled>Stand</button>
         <p id="message"></p>
     </div>
     <script>
@@ -109,6 +109,9 @@
                 alert("Invalid bet amount, my lovely!");
                 return;
             }
+            document.getElementById("hit-btn").disabled = false;
+            document.getElementById("stand-btn").disabled = false;
+            document.getElementById("start-btn").disabled = true;
             deck = createDeck();
             playerHand = [deck.pop(), deck.pop()];
             dealerHand = [deck.pop(), deck.pop()];
@@ -168,8 +171,10 @@
             } else {
                 document.getElementById("message").innerText = "It's a tie!";
             }
-            
-            setTimeout(startGame, 2000); 
+
+            document.getElementById("hit-btn").disabled = true;
+            document.getElementById("stand-btn").disabled = true;
+            document.getElementById("start-btn").disabled = false;
         }
 
         function calculateHand(hand) {
