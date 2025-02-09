@@ -150,8 +150,6 @@
                     }, 50);
                 }, (index + 1) * 1000); 
             });
-
-            checkWinner();
         }
 
         function checkWinner() {
@@ -159,27 +157,22 @@
             let dealerTotal = calculateHand(dealerHand);
             let bet = parseInt(document.getElementById('bet').value);
 
-            while (dealerTotal < 17) {
-                dealerHand.push(deck.pop());
-                dealerTotal = calculateHand(dealerHand);
-            }
-
             if (playerTotal > 21) {
                 document.getElementById("message").innerText = "You lose!";
                 updateTokens(-bet);
+                endGame();
             } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
                 document.getElementById("message").innerText = "You win!";
                 updateTokens(bet);
+                endGame();
             } else if (playerTotal < dealerTotal) {
                 document.getElementById("message").innerText = "You lose!";
                 updateTokens(-bet);
-            } else {
+                endGame();
+            } else if (playerTotal === dealerTotal) {
                 document.getElementById("message").innerText = "It's a tie!";
+                endGame();
             }
-
-            document.getElementById("hit-btn").disabled = true;
-            document.getElementById("stand-btn").disabled = true;
-            document.getElementById("new-game-btn").disabled = false;
         }
 
         function calculateHand(hand) {
@@ -209,13 +202,21 @@
         function hit() {
             playerHand.push(deck.pop());
             displayCards();
+            checkWinner();
         }
 
         function stand() {
             while (calculateHand(dealerHand) < 17) {
                 dealerHand.push(deck.pop());
             }
+            displayCards();
             checkWinner();
+        }
+
+        function endGame() {
+            document.getElementById("hit-btn").disabled = true;
+            document.getElementById("stand-btn").disabled = true;
+            document.getElementById("new-game-btn").disabled = false;
         }
     </script>
 </body>
