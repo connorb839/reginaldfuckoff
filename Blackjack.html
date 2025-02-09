@@ -159,9 +159,9 @@
             let dealerTotal = calculateHand(dealerHand);
             let bet = parseInt(document.getElementById('bet').value);
 
-            while (calculateHand(dealerHand) < 17) {
+            while (dealerTotal < 17) {
                 dealerHand.push(deck.pop());
-                displayCards();
+                dealerTotal = calculateHand(dealerHand);
             }
 
             if (playerTotal > 21) {
@@ -215,7 +215,7 @@
             while (calculateHand(dealerHand) < 17) {
                 dealerHand.push(deck.pop());
             }
-            displayCards();
+            checkWinner();
         }
     </script>
 </body>
