@@ -1,8 +1,12 @@
-let tokens = localStorage.getItem("tokens") ? parseInt(localStorage.getItem("tokens")) : 100;
-document.getElementById("tokens").innerText = tokens;
+let deck, playerHand, dealerHand, tokens;
+
+document.addEventListener("DOMContentLoaded", () => {
+    tokens = localStorage.getItem("tokens") ? parseInt(localStorage.getItem("tokens")) : 100;
+    document.getElementById("tokens").innerText = tokens;
+});
 
 function updateTokens(amount) {
-    tokens = Math.max(1, tokens + amount);
+    tokens = Math.max(0, tokens + amount);
     localStorage.setItem("tokens", tokens);
     document.getElementById("tokens").innerText = tokens;
 }
@@ -19,60 +23,59 @@ function createDeck() {
     return deck.sort(() => Math.random() - 0.5);
 }
 
-let deck, playerHand, dealerHand, hiddenCard;
-
 function startGame() {
     let bet = parseInt(document.getElementById('bet').value);
     if (bet > tokens || bet < 1) {
-        alert("Invalid bet amount, my lovely!");
+        alert("Invalid bet amount!");
         return;
     }
+    
     document.getElementById("hit-btn").disabled = false;
     document.getElementById("stand-btn").disabled = false;
     document.getElementById("new-game-btn").disabled = true;
+    
     deck = createDeck();
     playerHand = [deck.pop(), deck.pop()];
-    dealerHand = [deck.pop()];
-    hiddenCard = deck.pop(); // Store hidden dealer card separately
-    displayCards(false);
+    dealerHand = [deck.pop(), deck.pop()];
+    
+    displayCards();
     document.getElementById("message").innerText = "Game Started!";
 }
 
-function displayCards(revealDealer) {
+function displayCards() {
     let playerDiv = document.getElementById("player-cards");
     let dealerDiv = document.getElementById("dealer-cards");
     playerDiv.innerHTML = "";
     dealerDiv.innerHTML = "";
-
-    function createCardElement(card) {
-        let cardElement = document.createElement("div");
-        cardElement.classList.add("card");
-        cardElement.innerHTML = `${card.value}${card.suit}`;
-        cardElement.style.opacity = "0";
-        cardElement.style.transform = "translateY(-50px)";
+    
+    playerHand.forEach((card, index) => {
         setTimeout(() => {
-            cardElement.style.opacity = "1";
-            cardElement.style.transform = "translateY(0)";
-        }, 100);
-        return cardElement;
-    }
-
-    playerHand.forEach(card => {
-        playerDiv.appendChild(createCardElement(card));
+            let cardElement = createCardElement(card);
+            playerDiv.appendChild(cardElement);
+            animateCard(cardElement);
+        }, index * 500);
     });
-
-    dealerHand.forEach(card => {
-        dealerDiv.appendChild(createCardElement(card));
+    
+    dealerHand.forEach((card, index) => {
+        setTimeout(() => {
+            let cardElement = createCardElement(card);
+            dealerDiv.appendChild(cardElement);
+            animateCard(cardElement);
+        }, (index + 1) * 500);
     });
+}
 
-    if (!revealDealer) {
-        let hiddenCardElement = document.createElement("div");
-        hiddenCardElement.classList.add("card");
-        hiddenCardElement.innerHTML = "?";
-        dealerDiv.appendChild(hiddenCardElement);
-    } else {
-        dealerDiv.appendChild(createCardElement(hiddenCard));
-    }
+function createCardElement(card) {
+    let cardElement = document.createElement("div");
+    cardElement.classList.add("card");
+    cardElement.innerHTML = `${card.value}${card.suit}`;
+    return cardElement;
+}
+
+function animateCard(cardElement) {
+    setTimeout(() => {
+        cardElement.classList.add("show");
+    }, 100);
 }
 
 function calculateHand(hand) {
@@ -95,55 +98,52 @@ function calculateHand(hand) {
         sum -= 10;
         aces -= 1;
     }
+
     return sum;
 }
 
 function hit() {
     playerHand.push(deck.pop());
-    displayCards(false);
-    if (calculateHand(playerHand) > 21) {
-        document.getElementById("message").innerText = "You busted!";
+    displayCards();
+    
+    let playerTotal = calculateHand(playerHand);
+    if (playerTotal > 21) {
+        document.getElementById("message").innerText = "You busted! Dealer wins.";
         updateTokens(-parseInt(document.getElementById('bet').value));
         endGame();
     }
 }
 
 function stand() {
-    dealerHand.push(hiddenCard); // Reveal dealer's hidden card
-    displayCards(true);
-    setTimeout(() => {
-        while (calculateHand(dealerHand) < 17) {
-            dealerHand.push(deck.pop());
-            displayCards(true);
-        }
-        checkWinner();
-    }, 1000);
+    document.getElementById("hit-btn").disabled = true;
+    document.getElementById("stand-btn").disabled = true;
+    
+    while (calculateHand(dealerHand) < 17) {
+        dealerHand.push(deck.pop());
+        displayCards();
+    }
+    
+    checkWinner();
 }
 
 function checkWinner() {
     let playerTotal = calculateHand(playerHand);
     let dealerTotal = calculateHand(dealerHand);
     let bet = parseInt(document.getElementById('bet').value);
-
-    setTimeout(() => {
-        if (playerTotal > 21) {
-            document.getElementById("message").innerText = "You lose!";
-            updateTokens(-bet);
-        } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
-            document.getElementById("message").innerText = "You win!";
-            updateTokens(bet);
-        } else if (playerTotal < dealerTotal) {
-            document.getElementById("message").innerText = "You lose!";
-            updateTokens(-bet);
-        } else {
-            document.getElementById("message").innerText = "It's a tie!";
-        }
-        endGame();
-    }, 1000);
+    
+    if (dealerTotal > 21 || playerTotal > dealerTotal) {
+        document.getElementById("message").innerText = "You win!";
+        updateTokens(bet);
+    } else if (playerTotal < dealerTotal) {
+        document.getElementById("message").innerText = "Dealer wins!";
+        updateTokens(-bet);
+    } else {
+        document.getElementById("message").innerText = "It's a tie!";
+    }
+    
+    endGame();
 }
 
 function endGame() {
-    document.getElementById("hit-btn").disabled = true;
-    document.getElementById("stand-btn").disabled = true;
     document.getElementById("new-game-btn").disabled = false;
 }
