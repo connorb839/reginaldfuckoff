@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #2E8B57;
+            color: white;
+        }
+        #game-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+        }
+        .card {
+            display: inline-block;
+            width: 50px;
+            height: 80px;
+            background-color: white;
+            color: black;
+            font-size: 24px;
+            line-height: 80px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        img {
+            width: 100px;
+            height: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blackjack</h1>
+    <div id="game-container">
+        <p>Reg Tokens: <span id="tokens"></span></p>
+        <p>Bet Amount: <input type="number" id="bet" value="10" min="1"></p>
+        <div>
+            <h2>Dealer</h2>
+            <img src="dealer.jpg" alt="Dealer">
+            <div id="dealer-cards"></div>
+        </div>
+        <div>
+            <h2>Your Hand</h2>
+            <div id="player-cards"></div>
+        </div>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="hit()">Hit</button>
+        <button onclick="stand()">Stand</button>
+        <p id="message"></p>
+    </div>
+    <script>
+        let tokens = localStorage.getItem("tokens") ? parseInt(localStorage.getItem("tokens")) : 100;
+        document.getElementById("tokens").innerText = tokens;
+        
+        function updateTokens(amount) {
+            tokens = Math.max(1, tokens + amount);
+            localStorage.setItem("tokens", tokens);
+            document.getElementById("tokens").innerText = tokens;
+        }
+        
+        function createDeck() {
+            let suits = ['♠', '♥', '♦', '♣'];
+            let values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+            let deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ value, suit });
+                }
+            }
+            return deck.sort(() => Math.random() - 0.5);
+        }
+        
+        function startGame() {
+            let bet = parseInt(document.getElementById('bet').value);
+            if (bet > tokens || bet < 1) {
+                alert("Invalid bet amount!");
+                return;
+            }
+            deck = createDeck();
+            playerHand = [deck.pop(), deck.pop()];
+            dealerHand = [deck.pop(), deck.pop()];
+            displayCards();
+            document.getElementById("message").innerText = "Game Started! Choose an action.";
+        }
+        
+        function getHandValue(hand) {
+            let value = 0;
+            let aces = 0;
+            for (let card of hand) {
+                if (['J', 'Q', 'K'].includes(card.value)) {
+                    value += 10;
+                } else if (card.value === 'A') {
+                    aces++;
+                    value += 11;
+                } else {
+                    value += parseInt(card.value);
+                }
+            }
+            while (value > 21 && aces > 0) {
+                value -= 10;
+                aces--;
+            }
+            return value;
+        }
+        
+        function hit() {
+            playerHand.push(deck.pop());
+            displayCards();
+            if (getHandValue(playerHand) > 21) {
+                updateTokens(-parseInt(document.getElementById('bet').value));
+                endGame("You busted! Dealer wins.");
+            }
+        }
+        
+        function stand() {
+            while (getHandValue(dealerHand) < 17) {
+                dealerHand.push(deck.pop());
+            }
+            let playerValue = getHandValue(playerHand);
+            let dealerValue = getHandValue(dealerHand);
+            let bet = parseInt(document.getElementById('bet').value);
+            if (dealerValue > 21 || playerValue > dealerValue) {
+                updateTokens(bet);
+                endGame("You win!");
+            } else if (dealerValue === playerValue) {
+                endGame("It's a tie!");
+            } else {
+                updateTokens(-bet);
+                endGame("Dealer wins.");
+            }
+        }
+        
+        function displayCards() {
+            document.getElementById("player-cards").innerHTML = playerHand.map(card => `<div class='card'>${card.value}${card.suit}</div>`).join('');
+            document.getElementById("dealer-cards").innerHTML = dealerHand.map(card => `<div class='card'>${card.value}${card.suit}</div>`).join('');
+        }
+        
+        function endGame(message) {
+            document.getElementById("message").innerText = message;
+        }
+    </script>
+</body>
+</html>
