@@ -101,6 +101,8 @@
             return deck.sort(() => Math.random() - 0.5);
         }
 
+        let deck, playerHand, dealerHand;
+        
         function startGame() {
             let bet = parseInt(document.getElementById('bet').value);
             if (bet > tokens || bet < 1) {
@@ -155,16 +157,16 @@
             let bet = parseInt(document.getElementById('bet').value);
 
             if (playerTotal > 21) {
-                document.getElementById("message").innerText = "You lost to Reg which makes sense he is all powerful My lovely!";
+                document.getElementById("message").innerText = "You lose!";
                 updateTokens(-bet);
             } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
-                document.getElementById("message").innerText = "You win somehow My lovely";
+                document.getElementById("message").innerText = "You win!";
                 updateTokens(bet);
             } else if (playerTotal < dealerTotal) {
-                document.getElementById("message").innerText = "You lost to Reg which makes sense he is all powerful My lovely!";
+                document.getElementById("message").innerText = "You lose!";
                 updateTokens(-bet);
             } else {
-                document.getElementById("message").innerText = "It's a tie! KYS My lovely";
+                document.getElementById("message").innerText = "It's a tie!";
             }
         }
 
@@ -203,4 +205,7 @@
             }
             displayCards();
         }
-    
+    </script>
+</body>
+</html>
+
